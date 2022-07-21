@@ -1,0 +1,128 @@
+#!/bin/bash
+
+function Usage(){
+	echo "Minecraft Vanilla server management tool"
+	echo "Syntax: mc-server [-c] <command>"
+	echo "Commands:"
+	echo "		start		starting the server"
+	echo "		stop		stopping the server"
+	echo "		stop-or-kill	try to stop the server, if can't, killing it"
+	echo "		kill		killing the server"
+	echo "		restart		stoping the server, if can't- killing it. Then restarting the server"
+	echo "		check		checking the server status"
+	echo "		console		giving access to the server console. To log out press CTRL + a + d (whether capital or not)"
+	echo "		help		printing this help phrase"
+	echo
+	echo
+	echo "WARNING! The stop command isn't working properly, so you should use the 'stop' command in the console to sshutdown the server properly"
+}
+
+function Check(){
+	Value=$(ps -x | grep java | grep -v 'grep\|SCREEN' | awk '{print $5}')
+}
+
+while getopts c: flag
+do
+	case "${flag}" in
+		c) CMD=${OPTARG};;
+	esac
+done
+
+if [[ "$CMD" == "start" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "server is already up"
+	else
+		echo "starting server..."
+		screen -dmS mc-console /usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui
+		sleep 5
+		echo "server started"
+	fi
+elif [[ "$CMD" == "stop" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "stopping server..."
+		pkill "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+		sleep 10
+		if [["$Value" == "/usr/bin/java" ]];then
+			echo "couldn't stop the server, try kill it with 'mc-server -c kill'"
+		else
+			echo "server stopped"
+		fi
+	else
+		echo "server isn't running, to start it run 'mc-server -c start'"
+	fi
+elif [[ "$CMD" == "stop-or-kill" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "stopping server..."
+        	pkill "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+        	sleep 10
+        	Check
+		if [[ "$Value" == "/usr/bin/java" ]];then
+			sleep 5
+                	Check
+			if [[ "$Value" == "/usr/bin/java" ]];then
+                        	echo "couldn't stop, killing..."
+				pkill -9 "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+				echo "killed"
+			else
+				echo "server stopped successfully without killing it"
+			fi
+        	fi
+	else
+		echo "server isn't running, to start it run 'mc-server -c start'"
+	fi
+elif [[ "$CMD" == "kill" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "killing server..."
+		pkill -9 "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+		echo "server killed"
+	else
+		echo "server isn't running, to start it run 'mc-server -c start'"
+	fi
+elif [[ "$CMD" == "restart" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "stopping server..."
+		pkill "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+		sleep 10
+		Check
+		if [[ "$Value" == "/usr/bin/java" ]];then
+			sleep 5
+			if [[ "$Value" == "/usr/bin/java" ]];then
+				pkill -9 "/usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui"
+			fi
+		fi
+		echo "server stopped"
+		echo "restarting server..."
+		screen -dmS mc-console /usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui
+		sleep 5
+		echo "server restarted"
+	else
+		echo "server isn't running, to start it run 'mc-server -c start'"
+	fi
+elif [[ "$CMD" == "check" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "server is up"
+	else
+		echo "server is down"
+	fi
+elif [[ "$CMD" == "console" ]];then
+	Check
+	if [[ "$Value" == "/usr/bin/java" ]];then
+		echo "wipping dead sessions..."
+		screen -ls | grep Dead | awk -F . '{print $1}' | awk '{print $1}'| xargs screen -wipe
+		echo "accessing the server console..."
+		screen -r mc-console
+	else 
+		echo "server isn't running, to start it run 'mc-server -c start'"
+	fi
+elif [[ "$CMD" == "help" ]];then
+	Usage
+else
+	Usage
+	echo "-mc-server: "$CMD": command not found"
+fi
