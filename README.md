@@ -9,7 +9,7 @@ For more information see my [Docker repo](https://hub.docker.com/r/1nachi/mc-ser
 
 The container run Miencraft 1.19 server. To change it, change the URL in the Dockerfile to the URL of the server version you want.
 
-You can find all minecraft server (and client) version at [MCVersion](https://mcversions.net)
+You can find all minecraft server (and client) version at [MCVersion](https://mcversions.net).
 
 ## Alpine variant
 
