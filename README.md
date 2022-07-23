@@ -5,7 +5,7 @@ To start the server run:
 
 `docker run -dt --restart unless-stopped --network host --name containerName 1nachi/mc-server:tagname`
 
-For more information see my [Docker repo](https://hub.docker.com/r/1nachi/mc-server)
+For more information see my [Docker repo](https://hub.docker.com/r/1nachi/mc-server).
 
 The container run Miencraft 1.19 server. To change it, change the URL in the Dockerfile to the URL of the server version you want.
 
