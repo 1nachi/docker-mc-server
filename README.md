@@ -1,5 +1,6 @@
 # docker-mc-server
 Minecraft server inside a docker container
+
 To start the server run:
 
 `docker run -dt --restart unless-stopped --network host --name containerName 1nachi/mc-server:tagname`
