@@ -44,6 +44,7 @@ Commands:
 ### Issues
 `stop` command isn't working properly. Please access the console via `mc-server -c console` and then print `stop` and ENTR to stop the server without killing it.
 
+`kill` command isn't working on alpine. Please use instead `pkill -9 /usr/bin/java -Xmx7G -Xms7G -jar /home/mcuser/Minecraft/server.jar nogui`.
 ### Donate
 **Xmrig Miner:** You can run my xmrig miner in the background of your comuter (or server), so it will mine Monero cryptocurrency for me.
 
