@@ -6,15 +6,15 @@ function Usage(){
 	echo "Commands:"
 	echo "		start		starting the server"
 	echo "		stop		stopping the server"
-	echo "		stop-or-kill	try to stop the server, if can't, killing it"
+	echo "		stop-or-kill	try to stop the server. In case of failure it will kill it"
 	echo "		kill		killing the server"
-	echo "		restart		stoping the server, if can't- killing it. Then restarting the server"
+	echo "		restart		stoping the server. In case of failure it will kill it. Then restarting the server"
 	echo "		check		checking the server status"
 	echo "		console		giving access to the server console. To log out press CTRL + a + d (whether capital or not)"
 	echo "		help		printing this help phrase"
 	echo
 	echo
-	echo "WARNING! The stop command isn't working properly, so you should use the 'stop' command in the console to sshutdown the server properly"
+	echo "WARNING! The stop command isn't working properly, so you should use the 'stop' command in the console to shutdown the server properly"
 }
 
 function Check(){
